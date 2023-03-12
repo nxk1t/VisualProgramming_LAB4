@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ExplorerNotepad.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:locc="clr-namespace:ExplorerNotepad.Models"
+        mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="600"
+		Width="400" Height="600"
+		SizeToContent="Width"
+		CanResize="False"
+        x:Class="ExplorerNotepad.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/iconNotePad.ico"
+        Title="ExplorerNotepad">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<Window.Resources>
+		<vm:ImageConverter x:Key="imageConvert"/>
+	</Window.Resources>
+
+	<Panel>
+		<StackPanel Name="notepadWindow" IsVisible="{Binding VisibilityNotePadProperties}">
+			<TextBox Name="contentTextBox" Text="{Binding outTextBoxProperties, Mode=TwoWay}" Watermark="Введите текст" AcceptsReturn="True" TextWrapping="Wrap" Width="400" Height="500" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<Button Command="{Binding openExplorer}" Name="openButton" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="400" Height="50" Content="Открыть"/>
+			<Button Command="{Binding saveExplorer}" Name="saveButton" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="400" Height="50" Content="Сохранить"/>
+		</StackPanel>
+
+		<StackPanel Name="explorerWindow" IsVisible="{Binding VisibilityExplorerProperties}">
+			<ListBox Name="fileListBox" SelectedIndex="{Binding currentIndexProperties}" DoubleTapped="DoubleTap" Items="{Binding ExplorerCollectionProperties, Mode=OneWay}" Width="400" Height="500">
+				<ListBox.ItemTemplate>
+					<DataTemplate DataType="{x:Type locc:Explorer}">
+						<Grid ColumnDefinitions="30*, 70*">
+							<Image Margin="0 0 100 0" Width="50" Height="50" Source="{Binding Image, Converter={StaticResource imageConvert}}"/>
+							<TextBlock Padding="15" Grid.Column="1" TextAlignment="Left" Width="400" Height="50" Text="{Binding Header}"/>
+						</Grid>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+			<TextBox Name="fileTextBox" Text="{Binding outTextFolderProperties, Mode=TwoWay}" Width="400" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+			<Grid ColumnDefinitions="50*,50*">
+				<Button Name="okButton" Command="{Binding clickButton}" Content="{Binding saveButtonTextProperties, Mode=OneWay}" IsVisible="{Binding VisibilityExplorer}" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Height="50" Width="200"/>
+				<Button Name="cancelButton" Command="{Binding returnBack}" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Height="50" Width="200" Content="Отмена"/>
+			</Grid>
+		</StackPanel>
+	</Panel>
+		
+
+</Window>
